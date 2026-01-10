@@ -3,7 +3,7 @@ import time
 
 import picamera
 
-from .base_camera import BaseCamera
+from buildmecar.base_camera import BaseCamera
 
 
 class Camera(BaseCamera):

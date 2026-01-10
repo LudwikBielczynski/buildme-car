@@ -5,7 +5,7 @@ import time
 from buildhat import PassiveMotor
 from flask import Flask, Response, render_template, request
 
-from .camera_pi import Camera
+from buildmecar.camera_pi import Camera
 
 
 def execute_command(cmd):
