@@ -156,4 +156,4 @@ if __name__ == "__main__":
     car = Car()
     car.stop()
 
-    app.run(host="0.0.0.0", threaded=True, debug=False)
+    app.run(host="0.0.0.0", port=5002, threaded=True, debug=False)
