@@ -18,8 +18,8 @@ def execute_command(cmd):
     return text
 
 
-txt = execute_command("ls /dev/video*")
-detect_flag = re.search(r"video0", txt, flags=re.I)
+video_devices = execute_command("ls /dev/video*")
+detect_flag = re.search(r"video0", video_devices, flags=re.I)
 
 app = Flask(__name__)
 
@@ -33,52 +33,52 @@ class Car(object):
         self.motor_left_rear = PassiveMotor("C")
         self.motor_left_front = PassiveMotor("D")
 
-    def set_spped(self, port: int, speed: int = 100):
+    def set_speed(self, port: int, speed: int = 100):
         port.start(int(speed))
 
     #   The following functions need to match the Raspberry Pi Build HAT port with the LEGO motor,
     #   otherwise it will not work properly
 
     def front(self, speed=100, time_ms=0):
-        self.set_spped(self.motor_right_rear, speed)
-        self.set_spped(self.motor_right_front, speed)
-        self.set_spped(self.motor_left_rear, -speed)
-        self.set_spped(self.motor_left_front, -speed)
+        self.set_speed(self.motor_right_rear, speed)
+        self.set_speed(self.motor_right_front, speed)
+        self.set_speed(self.motor_left_rear, -speed)
+        self.set_speed(self.motor_left_front, -speed)
         time.sleep(time_ms / 1000)
 
     def rear(self, speed=100, time_ms=0):
-        self.set_spped(self.motor_right_rear, -speed)
-        self.set_spped(self.motor_right_front, -speed)
-        self.set_spped(self.motor_left_rear, speed)
-        self.set_spped(self.motor_left_front, speed)
+        self.set_speed(self.motor_right_rear, -speed)
+        self.set_speed(self.motor_right_front, -speed)
+        self.set_speed(self.motor_left_rear, speed)
+        self.set_speed(self.motor_left_front, speed)
         time.sleep(time_ms / 1000)
 
     def right(self, speed=100, time_ms=0):
-        self.set_spped(self.motor_right_rear, -speed)
-        self.set_spped(self.motor_right_front, speed)
-        self.set_spped(self.motor_left_rear, -speed)
-        self.set_spped(self.motor_left_front, speed)
+        self.set_speed(self.motor_right_rear, -speed)
+        self.set_speed(self.motor_right_front, speed)
+        self.set_speed(self.motor_left_rear, -speed)
+        self.set_speed(self.motor_left_front, speed)
         time.sleep(time_ms / 1000)
 
     def left(self, speed=100, time_ms=0):
-        self.set_spped(self.motor_right_rear, speed)
-        self.set_spped(self.motor_right_front, -speed)
-        self.set_spped(self.motor_left_rear, speed)
-        self.set_spped(self.motor_left_front, -speed)
+        self.set_speed(self.motor_right_rear, speed)
+        self.set_speed(self.motor_right_front, -speed)
+        self.set_speed(self.motor_left_rear, speed)
+        self.set_speed(self.motor_left_front, -speed)
         time.sleep(time_ms / 1000)
 
     def front_left(self, speed=100, time_ms=0):
-        self.set_spped(self.motor_right_rear, speed)
-        self.set_spped(self.motor_right_front, speed)
-        self.set_spped(self.motor_left_rear, -speed / 5)
-        self.set_spped(self.motor_left_front, -speed / 5)
+        self.set_speed(self.motor_right_rear, speed)
+        self.set_speed(self.motor_right_front, speed)
+        self.set_speed(self.motor_left_rear, -speed / 5)
+        self.set_speed(self.motor_left_front, -speed / 5)
         time.sleep(time_ms / 1000)
 
     def front_right(self, speed=100, time_ms=0):
-        self.set_spped(self.motor_right_rear, speed / 5)
-        self.set_spped(self.motor_right_front, speed / 5)
-        self.set_spped(self.motor_left_rear, -speed)
-        self.set_spped(self.motor_left_front, -speed)
+        self.set_speed(self.motor_right_rear, speed / 5)
+        self.set_speed(self.motor_right_front, speed / 5)
+        self.set_speed(self.motor_left_rear, -speed)
+        self.set_speed(self.motor_left_front, -speed)
         time.sleep(time_ms / 1000)
 
     def rear_left(self, speed=100, time_ms=0):
@@ -95,13 +95,13 @@ class Car(object):
 
 
 def main(status):
-    if status == "ic_Up":
+    if status == "ic_up":
         car.front()
     elif status == "ic_left":
         car.left()
     elif status == "ic_right":
         car.right()
-    elif status == "ic_Down":
+    elif status == "ic_down":
         car.rear()
     elif status == "ic_stop":
         car.stop()

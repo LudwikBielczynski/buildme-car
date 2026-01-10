@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
     <title>Camera Streaming</title>
     <meta charset="UTF-8">
@@ -7,26 +8,26 @@
     <title> BuildMecar </title>
     <!--<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" media="screen">-->
     <script src="http://code.jquery.com/jquery.js"></script>
-<script>
-         
-        $(function(){
+    <script>
+
+        $(function () {
             var isTouchDevice = "ontouchstart" in document.documentElement ? true : false;
-            var BUTTON_DOWN   = isTouchDevice ? "touchstart" : "mousedown";
-            var BUTTON_UP     = isTouchDevice ? "touchend"   : "mouseup";
-             
-            $("button").bind(BUTTON_DOWN,function(){
-                $.post("/cmd",{id:this.id,status:"press"},function(data,status){
+            var BUTTON_DOWN = isTouchDevice ? "touchstart" : "mousedown";
+            var BUTTON_UP = isTouchDevice ? "touchend" : "mouseup";
+
+            $("button").bind(BUTTON_DOWN, function () {
+                $.post("/cmd", { id: this.id, status: "press" }, function (data, status) {
                 });
             });
- 
-            $("button").bind(BUTTON_UP,function(){
-                $.post("/cmd",{id:"stop",status:"release"},function(data,status){
+
+            $("button").bind(BUTTON_UP, function () {
+                $.post("/cmd", { id: "stop", status: "release" }, function (data, status) {
                 });
             });
         });
-        
+
     </script>
- 
+
     <style type="text/css">
         body {
             font: 12px;
@@ -36,10 +37,12 @@
             border: 0;
             background-color: #FAE798;
         }
+
         .video_body {
             width: 640px;
             height: 480px;
         }
+
         main {
             background-color: #FFF9DE;
             border-radius: 20px;
@@ -48,18 +51,22 @@
             padding: 40px 0px 40px 40px;
             text-align: center;
         }
+
         .video_out {
             display: inline-block;
             vertical-align: middle;
         }
+
         .main_key {
             display: inline-block;
             vertical-align: middle;
             text-align: center;
         }
-        .main_key > div{
+
+        .main_key>div {
             width: 500px;
         }
+
         .main_key h2 {
             background-color: #393939;
             display: inline-block;
@@ -67,6 +74,7 @@
             color: #FEBA00;
             border-radius: 100px;
         }
+
         button.btn_all {
             width: 125px;
             height: 125px;
@@ -75,47 +83,108 @@
             vertical-align: middle;
             cursor: pointer;
         }
-        #ic_leftUp{background:url("static/ic_leftUp.png") no-repeat center center;}
-        #ic_Up{background:url("static/ic_Up.png") no-repeat center center;}
-        #ic_rightUp{background:url("static/ic_rightUp.png") no-repeat center center;}
-        #ic_left{background:url("static/ic_left.png") no-repeat center center;}
-        #ic_stop{background:url("static/ic_stop.png") no-repeat center center;}
-        #ic_right{background:url("static/ic_right.png") no-repeat center center;}
-        #ic_leftDown{background:url("static/ic_leftDown.png") no-repeat center center;}
-        #ic_Down{background:url("static/ic_Down.png") no-repeat center center;}
-        #ic_rightDown{background:url("static/ic_rightDown.png") no-repeat center center;}
-        button.btn_small {background-size: 60.8%!important;}
-        #ic_stop{background-size: 78.4%}
-        #ic_stop:active{background-size: 72%}
-        button.btn_small:active {background-size: 56%!important;}
-        @media screen and (min-width: 1024px) and (max-width: 1200px){
-            main {padding: 40px;}
+
+        #ic_leftUp {
+            background: url("static/ic_leftUp.png") no-repeat center center;
         }
+
+        #ic_up {
+            background: url("static/ic_up.png") no-repeat center center;
+        }
+
+        #ic_rightUp {
+            background: url("static/ic_rightUp.png") no-repeat center center;
+        }
+
+        #ic_left {
+            background: url("static/ic_left.png") no-repeat center center;
+        }
+
+        #ic_stop {
+            background: url("static/ic_stop.png") no-repeat center center;
+        }
+
+        #ic_right {
+            background: url("static/ic_right.png") no-repeat center center;
+        }
+
+        #ic_leftDown {
+            background: url("static/ic_leftDown.png") no-repeat center center;
+        }
+
+        #ic_down {
+            background: url("static/ic_down.png") no-repeat center center;
+        }
+
+        #ic_rightDown {
+            background: url("static/ic_rightDown.png") no-repeat center center;
+        }
+
+        button.btn_small {
+            background-size: 60.8% !important;
+        }
+
+        #ic_stop {
+            background-size: 78.4%
+        }
+
+        #ic_stop:active {
+            background-size: 72%
+        }
+
+        button.btn_small:active {
+            background-size: 56% !important;
+        }
+
+        @media screen and (min-width: 1024px) and (max-width: 1200px) {
+            main {
+                padding: 40px;
+            }
+        }
+
         @media screen and (min-width: 768px) and (max-width: 1024px) {
-            body {background-color: #FFF9DE;}
+            body {
+                background-color: #FFF9DE;
+            }
+
             main {
                 margin: 0px;
                 padding: 0px;
                 text-align: center;
                 border-radius: 0px;
             }
-            .video_body {width: 100vw;height:auto}
-            .main_key {width: 100%;}
-            .main_key > div {width: 100%;}
+
+            .video_body {
+                width: 100vw;
+                height: auto
+            }
+
+            .main_key {
+                width: 100%;
+            }
+
+            .main_key>div {
+                width: 100%;
+            }
+
             button.btn_all {
                 width: 30vw;
                 height: 30vw;
             }
-            button.btn_middle img{margin: 40px 0;}
+
+            button.btn_middle img {
+                margin: 40px 0;
+            }
+
             .main_key h2 {
                 font-size: 40px;
                 margin: 100px;
             }
-}
-
+        }
     </style>
-     
+
 </head>
+
 <body>
     <main>
         <!-- <div class="video_out">
@@ -127,23 +196,24 @@
                 <div class="btn_out">
                     <div>
                         <button class="btn_all btn_small" id="ic_leftUp"></button>
-                        <button class="btn_all btn_small" id="ic_Up"></button>
+                        <button class="btn_all btn_small" id="ic_up"></button>
                         <button class="btn_all btn_small" id="ic_rightUp"></button>
                     </div>
                     <div>
                         <button class="btn_all btn_small" id="ic_left"></button>
                         <button class="btn_all btn_middle" id="ic_stop"></button>
                         <button class="btn_all btn_small" id="ic_right"></button>
-                  </div>
-                  <div>
+                    </div>
+                    <div>
                         <button class="btn_all btn_small" id="ic_leftDown"></button>
-                        <button class="btn_all btn_small" id="ic_Down"></button>
+                        <button class="btn_all btn_small" id="ic_down"></button>
                         <button class="btn_all btn_small" id="ic_rightDown"></button>
-                  </div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
 </body>
+
 </html>
