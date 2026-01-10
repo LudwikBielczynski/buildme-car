@@ -25,10 +25,10 @@ class Car(object):
     def __init__(self):
         # device need connected
 
-        self.motor_right_rear = PassiveMotor("A")
-        self.motor_right_front = PassiveMotor("B")
+        self.motor_right_rear = PassiveMotor("D")
+        self.motor_right_front = PassiveMotor("A")
         self.motor_left_rear = PassiveMotor("C")
-        self.motor_left_front = PassiveMotor("D")
+        self.motor_left_front = PassiveMotor("B")
 
     def set_speed(self, port: int, speed: int = 100):
         port.start(int(speed))
