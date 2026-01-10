@@ -15,3 +15,7 @@ buildmecare = "buildmecar.main:main"
 
 [dependency-groups]
 dev = ["ruff>=0.14.11"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
