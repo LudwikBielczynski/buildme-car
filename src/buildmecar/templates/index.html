@@ -29,17 +29,33 @@
 
             // Camera toggle button
             $("#toggle-camera").click(function () {
+                console.log("Toggle camera clicked");
                 {% if has_camera %}
                 $.post("/toggle_camera", function (data) {
+                    console.log("Toggle camera response:", data);
                     isCameraStreaming = data.streaming;
                     updateCameraUI();
+                }).fail(function (xhr, status, error) {
+                    console.error("Toggle camera failed:", status, error);
+                    alert("Failed to toggle camera: " + error);
                 });
+                {% else %}
+                console.log("Camera not available");
+                alert("Camera hardware not detected");
                 {% endif %}
             });
 
             // Take picture button
             $("#take-picture").bind(BUTTON_DOWN, function () {
+                console.log("Take picture clicked");
                 $.post("/cmd", { id: "take-picture", status: "press" }, function (data, status) {
+                    console.log("Take picture response:", data);
+                    if (data.message) {
+                        alert(data.message);
+                    }
+                }).fail(function (xhr, status, error) {
+                    console.error("Take picture failed:", status, error);
+                    alert("Failed to take picture: " + error);
                 });
             });
 

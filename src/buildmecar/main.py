@@ -28,6 +28,7 @@ app = Flask(__name__)
 # Global state for camera streaming
 camera_streaming_enabled = False
 camera_instance = None
+car = None
 
 
 # Automatically detects whether the camera exists and switches modes
@@ -79,6 +80,11 @@ if HAS_CAMERA_ON:
 
 else:
 
+    @app.route("/toggle_camera", methods=["POST"])
+    def toggle_camera():
+        """Toggle camera - no-op when camera doesn't exist."""
+        return jsonify({"streaming": False, "has_camera": False})
+
     @app.route("/camera_status")
     def camera_status():
         """Get current camera streaming status when no camera exists."""
@@ -86,15 +92,28 @@ else:
 
 
 def take_picture():
+    global camera_instance
+    if not HAS_CAMERA_ON:
+        return "Camera not available"
+
     home = Path.home()
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{home}/picture_{timestamp}.jpg"
-    camera = Camera()
-    camera.take_picture(filename)
+
+    if camera_instance is None:
+        camera_instance = Camera()
+
+    camera_instance.take_picture(filename)
     return f"Picture saved to {filename}"
 
 
 def main(status):
+    global car
+    result = None
+
+    if car is None:
+        return "Car not initialized"
+
     match status:
         case "ic-up":
             car.front()
@@ -105,7 +124,7 @@ def main(status):
         case "ic-down":
             car.rear()
         case "ic-stop":
-            car.stop
+            car.stop()
         case "stop":
             car.stop()
         case "ic-left-up":
@@ -117,9 +136,10 @@ def main(status):
         case "ic-right-down":
             car.rear_right()
         case "take-picture":
-            status = take_picture()
+            result = take_picture()
 
-    print(status)
+    print(status, result)
+    return result
 
 
 @app.route("/")
@@ -132,14 +152,20 @@ def index():
 def button():
     if request.method == "POST":
         data = request.form.to_dict()
-        main(data["id"])
-    return render_template("index.html")
+        result = main(data["id"])
+        return jsonify({
+            "status": "ok",
+            "message": result if result else "command executed",
+        })
+    return render_template("index.html", has_camera=HAS_CAMERA_ON)
 
 
 if __name__ == "__main__":
     os.system("/etc/rc.local")
     time.sleep(1)
+
+    # Initialize global car instance
     car = Car()
     car.stop()
 
-    app.run(host="0.0.0.0", port=5002, threaded=True, debug=False)
+    app.run(host="0.0.0.0", port=5002, threaded=True, debug=True)
