@@ -36,7 +36,7 @@ body {
     font-size: 14px;
     line-height: 1.5;
     color: var(--md-sys-color-on-surface);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #FFFFFF;
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -367,18 +367,32 @@ body {
     }
 }
 
-/* Landscape orientation on mobile */
-@media (max-width: 768px) and (orientation: landscape) {
+/* Landscape orientation - video left, controls right */
+@media (orientation: landscape) {
     .content-grid {
         grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .card-full {
+        grid-column: 1;
     }
 
     .camera-controls {
         flex-direction: row;
+        flex-wrap: nowrap;
+    }
+
+    .md-button {
+        width: auto;
     }
 
     #video-container {
-        max-height: 70vh;
+        max-height: 75vh;
+    }
+
+    .motor-grid {
+        max-width: 100%;
     }
 }
 
