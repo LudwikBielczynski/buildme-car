@@ -11,98 +11,89 @@ except ImportError:
         from _thread import get_ident
 
 
+class SingletonMeta(type):
+    _instance = None
+    _lock = threading.Lock()
+
+    def __call__(cls, *args, **kwargs):
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super().__call__(*args, **kwargs)
+        return cls._instance
+
+
 class CameraEvent:
     """An Event-like class that signals all active clients when a new frame is
     available.
     """
 
     def __init__(self):
-        self.events = {}
+        self.events: dict[int : threading.Event()] = {}
+        self.lock = threading.Lock()
 
     def wait(self):
         """Invoked from each client's thread to wait for the next frame."""
         ident = get_ident()
-        if ident not in self.events:
-            # this is a new client
-            # add an entry for it in the self.events dict
-            # each entry has two elements, a threading.Event() and a timestamp
-            self.events[ident] = [threading.Event(), time.time()]
-        return self.events[ident][0].wait()
+        with self.lock:
+            if ident not in self.events:
+                self.events[ident] = threading.Event()
+            event = self.events[ident]
+        event.wait()
+        event.clear()
 
     def set(self):
         """Invoked by the camera thread when a new frame is available."""
-        now = time.time()
-        remove = None
-        for ident, event in self.events.items():
-            if not event[0].isSet():
-                # if this client's event is not set, then set it
-                # also update the last set timestamp to now
-                event[0].set()
-                event[1] = now
-            else:
-                # if the client's event is already set, it means the client
-                # did not process a previous frame
-                # if the event stays set for more than 5 seconds, then assume
-                # the client is gone and remove it
-                if now - event[1] > 5:
-                    remove = ident
-        if remove:
-            del self.events[remove]
+        with self.lock:
+            for event in self.events.values():
+                event.set()
 
     def clear(self):
         """Invoked from each client's thread after a frame was processed."""
         self.events[get_ident()][0].clear()
 
 
-# TODO: Review why the class attributes are used for the state
-class BaseCamera(ABC):
-    thread = None  # background thread that reads frames from camera
-    frame = None  # current frame is stored here by background thread
-    last_access = 0  # time of last client access to the camera
-    event = CameraEvent()
-
+class BaseCamera(ABC, metaclass=SingletonMeta):
     def __init__(self):
-        """Start the background camera thread if it isn't running yet."""
-        if BaseCamera.thread is None:
-            BaseCamera.last_access = time.time()
+        self._thread = None
+        self._frame = None
+        self._event = CameraEvent()
+        self._lock = threading.Lock()
+        self._streaming = False
 
-            # start background frame thread
-            BaseCamera.thread = threading.Thread(target=self._thread)
-            BaseCamera.thread.start()
-
-            # wait until first frame is available
-            BaseCamera.event.wait()
-
-    @classmethod
-    def _thread(cls) -> None:
-        """Camera background thread."""
-        print("Starting camera thread.")
-        frames_iterator = cls.frames()
-        for frame in frames_iterator:
-            BaseCamera.frame = frame
-            BaseCamera.event.set()  # send signal to clients
+    def _thread_run(self):
+        for frame in self.frames():
+            with self._lock:
+                if not self._streaming:
+                    break
+                self._frame = frame
+            self._event.set()
             time.sleep(0)
 
-            # if there hasn't been any clients asking for frames in
-            # the last 10 seconds then stop the thread
-            if time.time() - BaseCamera.last_access > 10:
-                frames_iterator.close()
-                print("Stopping camera thread due to inactivity.")
-                break
+    def start_streaming(self):
+        with self._lock:
+            if not self._streaming:
+                self._streaming = True
+                self._thread = threading.Thread(target=self._thread_run)
+                self._thread.daemon = True
+                self._thread.start()
+                self._event.wait()
 
-        BaseCamera.thread = None
+    def stop_streaming(self):
+        with self._lock:
+            self._streaming = False
+        if self._thread is not None:
+            self._thread.join()
+            self._thread = None
 
     def get_frame(self):
-        """Return the current camera frame."""
-        BaseCamera.last_access = time.time()
+        self._event.wait()
+        with self._lock:
+            return self._frame
 
-        # wait for a signal from the camera thread
-        BaseCamera.event.wait()
-        BaseCamera.event.clear()
-
-        return BaseCamera.frame
-
-    @staticmethod
     @abstractmethod
-    def frames():
-        """Generator that returns frames from the camera."""
+    def frames(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def take_picture(self, filename):
+        raise NotImplementedError
