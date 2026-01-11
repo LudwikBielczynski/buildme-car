@@ -1,7 +1,7 @@
 import time
 from typing import NamedTuple
 
-from buildhat import PassiveMotor
+from buildhat import Hat, PassiveMotor
 
 
 class MotorDirections(NamedTuple):
@@ -17,16 +17,31 @@ DEFAULT_MOTOR_PULSE = 1000
 
 class Car:
     def __init__(self):
-        # Needs change depending on the place where the motors are connected
-        self.motor_right_rear = PassiveMotor("D")
-        self.motor_right_front = PassiveMotor("A")
-        self.motor_left_rear = PassiveMotor("C")
-        self.motor_left_front = PassiveMotor("B")
+        try:
+            self.hat = Hat()
+            self._has_motors = True
+            print("Hat found. Motors initialized.")
+
+        except FileNotFoundError:
+            print("Hat not found. Working in emulation mode.")
+            self._has_motors = False
+
+        if self._has_motors:
+            # Needs change depending on the place where the motors are connected
+            self.motor_right_rear = PassiveMotor("D")
+            self.motor_right_front = PassiveMotor("A")
+            self.motor_left_rear = PassiveMotor("C")
+            self.motor_left_front = PassiveMotor("B")
 
     def set_speed(self, port: int, speed: int = DEFAULT_MOTOR_SPEED):
         port.start(int(speed))
 
     def _run_motor(self, directions: MotorDirections, speed: int, time_ms: int) -> None:
+        if not self._has_motors:
+            print(
+                f"SIMULATE: Motor command - directions={directions}, speed={speed}, time={time_ms}ms"
+            )
+            return
         self.set_speed(self.motor_right_rear, directions.right_rear * speed)
         self.set_speed(self.motor_right_front, directions.right_front * speed)
         self.set_speed(self.motor_left_rear, directions.left_rear * speed)

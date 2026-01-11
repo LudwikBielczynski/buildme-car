@@ -1,27 +1,27 @@
-/* Material Design 3 Variables */
+/* Modern Tech Color Palette */
 :root {
-    --md-sys-color-primary: #6750A4;
+    --md-sys-color-primary: #0A84FF;
     --md-sys-color-on-primary: #FFFFFF;
-    --md-sys-color-primary-container: #EADDFF;
-    --md-sys-color-on-primary-container: #21005D;
-    --md-sys-color-secondary: #625B71;
-    --md-sys-color-secondary-container: #F5F5F5;
-    --md-sys-color-on-secondary-container: #1D192B;
-    --md-sys-color-tertiary: #7D5260;
-    --md-sys-color-surface: #FFFBFE;
-    --md-sys-color-surface-variant: #E7E0EC;
-    --md-sys-color-on-surface: #1C1B1F;
-    --md-sys-color-on-surface-variant: #49454F;
-    --md-sys-color-outline: #79747E;
-    --md-sys-color-error: #B3261E;
-    --md-sys-color-success: #2E7D32;
-    --md-sys-color-surface-container: #F3EDF7;
-    --md-sys-color-surface-container-high: #ECE6F0;
+    --md-sys-color-primary-container: #E3F2FD;
+    --md-sys-color-on-primary-container: #002F6C;
+    --md-sys-color-secondary: #00BCD4;
+    --md-sys-color-secondary-container: #ECEFF1;
+    --md-sys-color-on-secondary-container: #1A1C1E;
+    --md-sys-color-tertiary: #00E676;
+    --md-sys-color-surface: #FFFFFF;
+    --md-sys-color-surface-variant: #F5F7FA;
+    --md-sys-color-on-surface: #1A1C1E;
+    --md-sys-color-on-surface-variant: #424242;
+    --md-sys-color-outline: #9E9E9E;
+    --md-sys-color-error: #FF3B30;
+    --md-sys-color-success: #00E676;
+    --md-sys-color-surface-container: #F8F9FA;
+    --md-sys-color-surface-container-high: #ECEFF1;
 
-    /* Elevation shadows */
-    --md-sys-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
-    --md-sys-elevation-2: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
-    --md-sys-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+    /* Modern elevation shadows with blue tint */
+    --md-sys-elevation-1: 0 1px 3px rgba(10, 132, 255, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+    --md-sys-elevation-2: 0 3px 6px rgba(10, 132, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+    --md-sys-elevation-3: 0 6px 12px rgba(10, 132, 255, 0.18), 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 * {

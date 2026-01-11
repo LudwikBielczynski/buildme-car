@@ -168,11 +168,11 @@ def button():
 
 
 if __name__ == "__main__":
-    os.system("/etc/rc.local")
-    time.sleep(1)
+    # Initialize rc.local if on Raspberry Pi
+    if os.path.exists("/etc/rc.local"):
+        os.system("/etc/rc.local")
+        time.sleep(1)
 
     # Initialize global car instance
     car = Car()
-    car.stop()
-
     app.run(host="0.0.0.0", port=5002, threaded=True, debug=False)
