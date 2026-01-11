@@ -29,7 +29,7 @@ service-uninstall:
 service-restart:
 	sudo systemctl restart buildmecar
 
-status-service:
+service-status:
 	sudo systemctl status buildmecar
 
 service-logs:
