@@ -18,7 +18,9 @@ def execute_command(cmd: str):
 
 
 video_devices = execute_command("ls /dev/video*")
+print(f"Video devices detected: {video_devices}")
 HAS_CAMERA_ON = bool(re.search(r"video0", video_devices, flags=re.I))
+print(f"HAS_CAMERA_ON: {HAS_CAMERA_ON}")
 
 DEFAULT_MOTOR_SPEED = 98
 DEFAULT_MOTOR_PULSE = 1000
@@ -135,6 +137,7 @@ def main(status):
 @app.route("/")
 def index():
     """Video streaming home page."""
+    print(f"Rendering index with has_camera={HAS_CAMERA_ON}")
     return render_template("index.html", has_camera=HAS_CAMERA_ON)
 
 
