@@ -11,18 +11,23 @@ from buildmecar.base_camera import BaseCamera
 
 class Camera(BaseCamera):
     def frames(self):
+        print("Opening PiCamera...")
         with picamera.PiCamera(resolution=(320, 240), framerate=10) as camera:
+            print("PiCamera opened successfully")
             camera.exposure_mode = "auto"
             camera.awb_mode = "auto"
+            print("Waiting 2 seconds for camera warmup...")
             time.sleep(2)
             gain = camera.awb_gains
             camera.awb_mode = "off"
             camera.awb_gains = gain
+            print("Starting continuous capture...")
 
             stream = io.BytesIO()
             for _ in camera.capture_continuous(stream, "jpeg", use_video_port=True):
                 with self._lock:
                     if not self._streaming:
+                        print("Streaming stopped, breaking loop")
                         break
                 stream.seek(0)
                 yield stream.read()
