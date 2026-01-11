@@ -44,12 +44,8 @@ if HAS_CAMERA_ON:
     def video_feed():
         """Video streaming route. Put this in the src attribute of an img tag."""
         global camera_streaming_enabled, camera_instance
-        if not camera_streaming_enabled:
+        if not camera_streaming_enabled or camera_instance is None:
             return Response("Camera streaming is disabled", status=503)
-
-        if camera_instance is None:
-            camera_instance = Camera()
-            camera_instance.start_streaming()
 
         return Response(
             gen(camera_instance), mimetype="multipart/x-mixed-replace; boundary=frame"
