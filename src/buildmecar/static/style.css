@@ -175,7 +175,6 @@ body {
     justify-content: center;
     gap: 8px;
     padding: 10px 24px;
-    min-height: 40px;
     border: none;
     border-radius: 20px;
     font-family: 'Roboto', sans-serif;
@@ -379,7 +378,6 @@ body {
 
     .md-button {
         padding: 8px 16px;
-        min-height: 36px;
         font-size: 13px;
         flex: 1;
     }
@@ -427,7 +425,6 @@ body {
 
     .md-button {
         padding: 6px 12px;
-        min-height: 32px;
         font-size: 12px;
     }
 
