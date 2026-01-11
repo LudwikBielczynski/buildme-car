@@ -1,6 +1,6 @@
 import threading
 import time
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 
 try:
     from greenlet import getcurrent as get_ident
@@ -11,15 +11,16 @@ except ImportError:
         from _thread import get_ident
 
 
-class SingletonMeta(type):
-    _instance = None
+class SingletonMeta(ABCMeta):
+    _instances = {}
     _lock = threading.Lock()
 
     def __call__(cls, *args, **kwargs):
         with cls._lock:
-            if cls._instance is None:
-                cls._instance = super().__call__(*args, **kwargs)
-        return cls._instance
+            if cls not in cls._instances:
+                instance = super().__call__(*args, **kwargs)
+                cls._instances[cls] = instance
+        return cls._instances[cls]
 
 
 class CameraEvent:
