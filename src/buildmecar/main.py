@@ -57,17 +57,30 @@ if HAS_CAMERA_ON:
     def toggle_camera():
         """Toggle camera streaming on/off."""
         global camera_streaming_enabled, camera_instance
-        camera_streaming_enabled = not camera_streaming_enabled
+        try:
+            camera_streaming_enabled = not camera_streaming_enabled
+            print(f"Camera streaming toggled to: {camera_streaming_enabled}")
 
-        if camera_streaming_enabled:
-            if camera_instance is None:
-                camera_instance = Camera()
-            camera_instance.start_streaming()
-        else:
-            if camera_instance is not None:
-                camera_instance.stop_streaming()
+            if camera_streaming_enabled:
+                if camera_instance is None:
+                    print("Creating new Camera instance...")
+                    camera_instance = Camera()
+                print("Starting camera streaming...")
+                camera_instance.start_streaming()
+                print("Camera streaming started successfully")
+            else:
+                if camera_instance is not None:
+                    print("Stopping camera streaming...")
+                    camera_instance.stop_streaming()
+                    print("Camera streaming stopped")
 
-        return jsonify({"streaming": camera_streaming_enabled})
+            return jsonify({"streaming": camera_streaming_enabled})
+        except Exception as e:
+            print(f"Error toggling camera: {e}")
+            import traceback
+            traceback.print_exc()
+            camera_streaming_enabled = False
+            return jsonify({"streaming": False, "error": str(e)}), 500
 
     @app.route("/camera_status")
     def camera_status():

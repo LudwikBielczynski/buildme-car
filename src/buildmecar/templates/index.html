@@ -30,7 +30,9 @@
             // Camera toggle button
             $("#toggle-camera").click(function () {
                 console.log("Toggle camera clicked");
+                console.log("has_camera value: {{ has_camera }}");
                 {% if has_camera %}
+                console.log("Inside has_camera block, making POST request...");
                 $.post("/toggle_camera", function (data) {
                     console.log("Toggle camera response:", data);
                     isCameraStreaming = data.streaming;
