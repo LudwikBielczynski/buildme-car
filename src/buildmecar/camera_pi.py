@@ -9,7 +9,7 @@ from buildmecar.base_camera import BaseCamera
 class Camera(BaseCamera):
     @staticmethod
     def frames():
-        with picamera.PiCamera() as camera:
+        with picamera.PiCamera(resolution=(320, 240), framerate=10) as camera:
             # let camera warm up
             camera.exposure_mode = "auto"
             camera.awb_mode = "auto"
