@@ -1,0 +1,13 @@
+[Unit]
+Description=BuildMecar web server and motor control daemon
+
+[Service]
+Type=exec
+User=pi
+WorkingDirectory=/home/pi/buildmecar
+ExecStart=/usr/bin/make run-server
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
