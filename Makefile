@@ -4,7 +4,6 @@ install:
 update:
 	git reset --hard
 	git pull
-	# uv add picamera
 
 run-server:
 	uv run src/buildmecar/main.py 
