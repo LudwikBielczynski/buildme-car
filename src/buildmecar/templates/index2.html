@@ -27,6 +27,13 @@
         });
 
     </script>
+    <script>
+        document.getElementById('take-picture-btn').onclick = async function () {
+            const res = await fetch('/take_picture', { method: 'POST' });
+            const msg = await res.text();
+            alert(msg);
+        };
+    </script>
 
     <style type="text/css">
         body {
@@ -190,6 +197,8 @@
         <!-- <div class="video_out">
             <img class="video_body" />
         </div> -->
+        <button id="take-picture-btn">Take Picture</button>
+
         <div class="main_key">
             <div>
                 <h2>Motor Control</h2>

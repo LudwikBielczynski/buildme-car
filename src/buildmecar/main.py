@@ -1,3 +1,4 @@
+import datetime
 import os
 import re
 import time
@@ -83,6 +84,15 @@ def button():
         data = request.form.to_dict()
         main(data["id"])
     return render_template("index.html")
+
+
+@app.route("/take_picture", methods=["POST"])
+def take_picture():
+    home = os.path.expanduser("~")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"{home}/picture_{timestamp}.jpg"
+    Camera.take_picture(filename)
+    return f"Picture saved to {filename}"
 
 
 if __name__ == "__main__":

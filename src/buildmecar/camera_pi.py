@@ -28,3 +28,14 @@ class Camera(BaseCamera):
                 # reset stream for next frame
                 stream.seek(0)
                 stream.truncate()
+
+    @staticmethod
+    def take_picture(filename):
+        with picamera.PiCamera() as camera:
+            camera.exposure_mode = "auto"
+            camera.awb_mode = "auto"
+            time.sleep(2)
+            gain = camera.awb_gains
+            camera.awb_mode = "off"
+            camera.awb_gains = gain
+            camera.capture(filename)
