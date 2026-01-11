@@ -38,6 +38,8 @@ body {
     color: var(--md-sys-color-on-surface);
     background: #FFFFFF;
     height: 100vh;
+    height: 100dvh;
+    /* Dynamic viewport height accounts for browser UI */
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -48,6 +50,8 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    height: 100dvh;
+    /* Dynamic viewport height accounts for browser UI */
     max-width: 1600px;
     margin: 0 auto;
     padding: 8px;
@@ -433,6 +437,7 @@ body {
 
     #video-container {
         max-height: calc(100vh - 120px);
+        max-height: calc(100dvh - 120px);
     }
 
     .motor-grid {

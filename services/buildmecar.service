@@ -5,7 +5,7 @@ Description=BuildMecar web server and motor control daemon
 Type=exec
 User=pi
 WorkingDirectory=/home/pi/buildme-car
-ExecStart=/usr/bin/make run-server
+ExecStart=/home/pi/.local/bin/uv run src/buildmecar/main.py 
 KillMode=process
 Restart=on-failure
 
