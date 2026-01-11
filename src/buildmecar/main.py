@@ -25,7 +25,7 @@ print(f"HAS_CAMERA_ON: {HAS_CAMERA_ON}")
 DEFAULT_MOTOR_SPEED = 98
 DEFAULT_MOTOR_PULSE = 1000
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../static", template_folder="../templates")
 
 # Global state for camera streaming
 camera_streaming_enabled = False

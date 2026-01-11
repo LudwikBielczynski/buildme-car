@@ -1,0 +1,155 @@
+body {
+    font: 12px;
+    font-family: Arial, "sans-serif";
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: #FAE798;
+}
+
+.video_body {
+    width: 640px;
+    height: 480px;
+}
+
+main {
+    background-color: #FFF9DE;
+    border-radius: 20px;
+    margin: 60px auto;
+    max-width: 1200px;
+    padding: 40px 0px 40px 40px;
+    text-align: center;
+}
+
+.video_out {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.camera_controls {
+    margin: 20px 0;
+}
+
+#toggle-camera {
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    background-color: #5cb85c;
+    margin-right: 10px;
+}
+
+#toggle-camera:hover {
+    opacity: 0.9;
+}
+
+#toggle-camera:active {
+    transform: scale(0.98);
+}
+
+.main_key {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.main_key>div {
+    width: 500px;
+}
+
+.main_key h2 {
+    background-color: #393939;
+    display: inline-block;
+    padding: 10px 30px;
+    color: #FEBA00;
+    border-radius: 100px;
+}
+
+button.btn-all {
+    width: 125px;
+    height: 125px;
+    border: none;
+    background-color: #E0E0E0;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button.btn-all:hover {
+    background-color: #BDBDBD;
+    transform: scale(1.05);
+}
+
+button.btn-all:active {
+    transform: scale(0.95);
+}
+
+button.btn-all .material-icons {
+    font-size: 64px;
+    color: #424242;
+}
+
+#ic-stop {
+    background-color: #EF5350;
+}
+
+#ic-stop:hover {
+    background-color: #E53935;
+}
+
+#ic-stop .material-icons {
+    color: white;
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1200px) {
+    main {
+        padding: 40px;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    body {
+        background-color: #FFF9DE;
+    }
+
+    main {
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        border-radius: 0px;
+    }
+
+    .video_body {
+        width: 100vw;
+        height: auto
+    }
+
+    .main_key {
+        width: 100%;
+    }
+
+    .main_key>div {
+        width: 100%;
+    }
+
+    button.btn-all {
+        width: 30vw;
+        height: 30vw;
+    }
+
+    button.btn-middle img {
+        margin: 40px 0;
+    }
+
+    .main_key h2 {
+        font-size: 40px;
+        margin: 100px;
+    }
+}
