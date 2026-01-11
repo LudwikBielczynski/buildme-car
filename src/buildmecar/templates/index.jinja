@@ -1,77 +1,113 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <title>BuildMecar</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6750A4">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-
         $(function () {
-            var isTouchDevice = "ontouchstart" in document.documentElement ? true : false;
+            var isTouchDevice = "ontouchstart" in document.documentElement;
             var BUTTON_DOWN = isTouchDevice ? "touchstart" : "mousedown";
             var BUTTON_UP = isTouchDevice ? "touchend" : "mouseup";
             var isCameraStreaming = false;
 
+            // Show notification snackbar
+            function showSnackbar(message, icon = 'info') {
+                const snackbar = $('<div class="snackbar"></div>');
+                snackbar.html(`
+                    <span class="material-icons">${icon}</span>
+                    <span>${message}</span>
+                `);
+                $('body').append(snackbar);
+
+                setTimeout(() => snackbar.addClass('show'), 10);
+                setTimeout(() => {
+                    snackbar.removeClass('show');
+                    setTimeout(() => snackbar.remove(), 300);
+                }, 3000);
+            }
+
             // Motor control buttons
             $("button.motor-btn").bind(BUTTON_DOWN, function () {
-                $.post("/cmd", { id: this.id, status: "press" }, function (data, status) {
-                });
+                $(this).css('transform', 'scale(0.92)');
+                $.post("/cmd", { id: this.id, status: "press" });
             });
 
             $("button.motor-btn").bind(BUTTON_UP, function () {
-                $.post("/cmd", { id: "stop", status: "release" }, function (data, status) {
-                });
+                $(this).css('transform', '');
+                $.post("/cmd", { id: "stop", status: "release" });
             });
 
             // Camera toggle button
             $("#toggle-camera").click(function () {
-                console.log("Toggle camera clicked");
-                console.log("has_camera value: {{ has_camera }}");
                 {% if has_camera %}
-                console.log("Inside has_camera block, making POST request...");
+                const btn = $(this);
+                btn.prop('disabled', true);
+
                 $.post("/toggle_camera", function (data) {
-                    console.log("Toggle camera response:", data);
                     isCameraStreaming = data.streaming;
                     updateCameraUI();
+                    showSnackbar(
+                        isCameraStreaming ? 'Camera started' : 'Camera stopped',
+                        isCameraStreaming ? 'videocam' : 'videocam_off'
+                    );
+                    btn.prop('disabled', false);
                 }).fail(function (xhr, status, error) {
-                    console.error("Toggle camera failed:", status, error);
-                    alert("Failed to toggle camera: " + error);
+                    console.error("Toggle camera failed:", error);
+                    showSnackbar('Failed to toggle camera', 'error');
+                    btn.prop('disabled', false);
                 });
                 {% else %}
-                console.log("Camera not available");
-                alert("Camera hardware not detected");
+                showSnackbar('Camera hardware not detected', 'warning');
                 {% endif %}
             });
 
             // Take picture button
-            $("#take-picture").bind(BUTTON_DOWN, function () {
-                console.log("Take picture clicked");
-                $.post("/cmd", { id: "take-picture", status: "press" }, function (data, status) {
-                    console.log("Take picture response:", data);
+            $("#take-picture").click(function () {
+                const btn = $(this);
+                btn.prop('disabled', true);
+
+                $.post("/cmd", { id: "take-picture", status: "press" }, function (data) {
                     if (data.message) {
-                        alert(data.message);
+                        showSnackbar(data.message, 'photo_camera');
                     }
+                    btn.prop('disabled', false);
                 }).fail(function (xhr, status, error) {
-                    console.error("Take picture failed:", status, error);
-                    alert("Failed to take picture: " + error);
+                    console.error("Take picture failed:", error);
+                    showSnackbar('Failed to take picture', 'error');
+                    btn.prop('disabled', false);
                 });
             });
 
             function updateCameraUI() {
+                const statusBadge = $('#camera-status');
+
                 if (isCameraStreaming) {
                     $("#video-feed").attr("src", "/video_feed?" + new Date().getTime());
-                    $("#video-container").show();
-                    $("#toggle-camera").text("Stop Camera");
-                    $("#toggle-camera").css("background-color", "#d9534f");
+                    $("#video-container").addClass("active");
+                    $("#toggle-camera")
+                        .removeClass("md-button-success")
+                        .addClass("md-button-error")
+                        .html('<span class="material-icons">videocam_off</span>Stop Camera');
+                    statusBadge.addClass('active')
+                        .html('<span class="material-icons">circle</span>Streaming');
                 } else {
                     $("#video-feed").attr("src", "");
-                    $("#video-container").hide();
-                    $("#toggle-camera").text("Start Camera");
-                    $("#toggle-camera").css("background-color", "#5cb85c");
+                    $("#video-container").removeClass("active");
+                    $("#toggle-camera")
+                        .removeClass("md-button-error")
+                        .addClass("md-button-success")
+                        .html('<span class="material-icons">videocam</span>Start Camera');
+                    statusBadge.removeClass('active')
+                        .html('<span class="material-icons">circle</span>Offline');
                 }
             }
 
@@ -82,69 +118,93 @@
                 updateCameraUI();
             });
             {% else %}
-            $("#video-container").hide();
-            $("#toggle-camera").hide();
-            $("#take-picture").hide();
+            $("#toggle-camera").prop('disabled', true).removeClass('md-button-success').addClass('md-button-tonal');
+            $("#take-picture").prop('disabled', true);
             {% endif %}
         });
-
     </script>
-
 </head>
 
 <body>
-    <main>
-        <div class="camera_controls">
-            <button id="toggle-camera">Start Camera</button>
-            <button class="btn-all btn-small" id="take-picture">Take Picture</button>
+    <div class="app-container">
+        <!-- App Bar -->
+        <div class="app-bar">
+            <div class="app-bar-title">
+                <span class="material-icons">directions_car</span>
+                <span>BuildMecar</span>
+            </div>
+            <div id="camera-status" class="status-badge">
+                <span class="material-icons">circle</span>
+                Offline
+            </div>
         </div>
 
-        <div id="video-container" class="video_out" style="display:none;">
-            <img id="video-feed" class="video_body" src="" />
-        </div>
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Camera Card -->
+            <div class="card card-full">
+                <div class="card-title">
+                    <span class="material-icons">videocam</span>
+                    Camera Control
+                </div>
 
-        <div class="main_key">
-            <div>
-                <h2>Motor Control</h2>
-                <div class="btn_out">
-                    <div>
-                        <button class="btn-all motor-btn" id="ic-left-up">
-                            <span class="material-icons">north_west</span>
-                        </button>
-                        <button class="btn-all motor-btn" id="ic-up">
-                            <span class="material-icons">north</span>
-                        </button>
-                        <button class="btn-all motor-btn" id="ic-right-up">
-                            <span class="material-icons">north_east</span>
-                        </button>
-                    </div>
-                    <div>
-                        <button class="btn-all motor-btn" id="ic-left">
-                            <span class="material-icons">west</span>
-                        </button>
-                        <button class="btn-all motor-btn" id="ic-stop">
-                            <span class="material-icons">stop_circle</span>
-                        </button>
-                        <button class="btn-all motor-btn" id="ic-right">
-                            <span class="material-icons">east</span>
-                        </button>
-                    </div>
-                    <div>
-                        <button class="btn-all motor-btn" id="ic-left-down">
-                            <span class="material-icons">south_west</span>
-                        </button>
-                        <button class="btn-all motor-btn" id="ic-down">
-                            <span class="material-icons">south</span>
-                        </button>
-                        <button class="btn-all motor-btn" id="ic-right-down">
-                            <span class="material-icons">south_east</span>
-                        </button>
-                    </div>
+                <div class="camera-controls">
+                    <button id="toggle-camera" class="md-button md-button-success">
+                        <span class="material-icons">videocam</span>
+                        Start Camera
+                    </button>
+                    <button id="take-picture" class="md-button md-button-tonal">
+                        <span class="material-icons">photo_camera</span>
+                        Take Picture
+                    </button>
+                </div>
+
+                <div id="video-container">
+                    <img id="video-feed" alt="Camera Feed" />
+                </div>
+            </div>
+
+            <!-- Motor Control Card -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="material-icons">gamepad</span>
+                    Motor Control
+                </div>
+
+                <div class="motor-grid">
+                    <button class="motor-btn" id="ic-left-up">
+                        <span class="material-icons">north_west</span>
+                    </button>
+                    <button class="motor-btn" id="ic-up">
+                        <span class="material-icons">north</span>
+                    </button>
+                    <button class="motor-btn" id="ic-right-up">
+                        <span class="material-icons">north_east</span>
+                    </button>
+
+                    <button class="motor-btn" id="ic-left">
+                        <span class="material-icons">west</span>
+                    </button>
+                    <button class="motor-btn" id="ic-stop">
+                        <span class="material-icons">stop_circle</span>
+                    </button>
+                    <button class="motor-btn" id="ic-right">
+                        <span class="material-icons">east</span>
+                    </button>
+
+                    <button class="motor-btn" id="ic-left-down">
+                        <span class="material-icons">south_west</span>
+                    </button>
+                    <button class="motor-btn" id="ic-down">
+                        <span class="material-icons">south</span>
+                    </button>
+                    <button class="motor-btn" id="ic-right-down">
+                        <span class="material-icons">south_east</span>
+                    </button>
                 </div>
             </div>
         </div>
-    </main>
-
+    </div>
 </body>
 
 </html>
