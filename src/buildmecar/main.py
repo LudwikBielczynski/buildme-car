@@ -107,6 +107,7 @@ def take_picture():
 
 
 def main(status):
+    result = None
     match status:
         case "ic-up":
             car.front()
