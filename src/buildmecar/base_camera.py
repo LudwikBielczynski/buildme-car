@@ -1,5 +1,6 @@
 import threading
 import time
+from abc import ABC, abstractmethod
 
 try:
     from greenlet import getcurrent as get_ident
@@ -10,10 +11,11 @@ except ImportError:
         from _thread import get_ident
 
 
-class CameraEvent(object):
+class CameraEvent:
     """An Event-like class that signals all active clients when a new frame is
     available.
     """
+
     def __init__(self):
         self.events = {}
 
@@ -52,7 +54,8 @@ class CameraEvent(object):
         self.events[get_ident()][0].clear()
 
 
-class BaseCamera(object):
+# TODO: Review why the class attributes are used for the state
+class BaseCamera(ABC):
     thread = None  # background thread that reads frames from camera
     frame = None  # current frame is stored here by background thread
     last_access = 0  # time of last client access to the camera
@@ -70,6 +73,25 @@ class BaseCamera(object):
             # wait until first frame is available
             BaseCamera.event.wait()
 
+    @classmethod
+    def _thread(cls) -> None:
+        """Camera background thread."""
+        print("Starting camera thread.")
+        frames_iterator = cls.frames()
+        for frame in frames_iterator:
+            BaseCamera.frame = frame
+            BaseCamera.event.set()  # send signal to clients
+            time.sleep(0)
+
+            # if there hasn't been any clients asking for frames in
+            # the last 10 seconds then stop the thread
+            if time.time() - BaseCamera.last_access > 10:
+                frames_iterator.close()
+                print("Stopping camera thread due to inactivity.")
+                break
+
+        BaseCamera.thread = None
+
     def get_frame(self):
         """Return the current camera frame."""
         BaseCamera.last_access = time.time()
@@ -81,24 +103,6 @@ class BaseCamera(object):
         return BaseCamera.frame
 
     @staticmethod
+    @abstractmethod
     def frames():
-        """"Generator that returns frames from the camera."""
-        raise RuntimeError('Must be implemented by subclasses.')
-
-    @classmethod
-    def _thread(cls):
-        """Camera background thread."""
-        print('Starting camera thread.')
-        frames_iterator = cls.frames()
-        for frame in frames_iterator:
-            BaseCamera.frame = frame
-            BaseCamera.event.set()  # send signal to clients
-            time.sleep(0)
-
-            # if there hasn't been any clients asking for frames in
-            # the last 10 seconds then stop the thread
-            if time.time() - BaseCamera.last_access > 10:
-                frames_iterator.close()
-                print('Stopping camera thread due to inactivity.')
-                break
-        BaseCamera.thread = None
+        """Generator that returns frames from the camera."""
