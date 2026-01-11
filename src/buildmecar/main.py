@@ -4,7 +4,7 @@ import re
 import time
 from pathlib import Path
 
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, jsonify, render_template, request
 
 from buildmecar.camera_pi import Camera
 from buildmecar.car import Car
@@ -25,6 +25,10 @@ DEFAULT_MOTOR_PULSE = 1000
 
 app = Flask(__name__)
 
+# Global state for camera streaming
+camera_streaming_enabled = False
+camera_instance = None
+
 
 # Automatically detects whether the camera exists and switches modes
 if HAS_CAMERA_ON:
@@ -39,9 +43,46 @@ if HAS_CAMERA_ON:
     @app.route("/video_feed")
     def video_feed():
         """Video streaming route. Put this in the src attribute of an img tag."""
+        global camera_streaming_enabled, camera_instance
+        if not camera_streaming_enabled:
+            return Response("Camera streaming is disabled", status=503)
+
+        if camera_instance is None:
+            camera_instance = Camera()
+            camera_instance.start_streaming()
+
         return Response(
-            gen(Camera()), mimetype="multipart/x-mixed-replace; boundary=frame"
+            gen(camera_instance), mimetype="multipart/x-mixed-replace; boundary=frame"
         )
+
+    @app.route("/toggle_camera", methods=["POST"])
+    def toggle_camera():
+        """Toggle camera streaming on/off."""
+        global camera_streaming_enabled, camera_instance
+        camera_streaming_enabled = not camera_streaming_enabled
+
+        if camera_streaming_enabled:
+            if camera_instance is None:
+                camera_instance = Camera()
+            camera_instance.start_streaming()
+        else:
+            if camera_instance is not None:
+                camera_instance.stop_streaming()
+
+        return jsonify({"streaming": camera_streaming_enabled})
+
+    @app.route("/camera_status")
+    def camera_status():
+        """Get current camera streaming status."""
+        global camera_streaming_enabled
+        return jsonify({"streaming": camera_streaming_enabled, "has_camera": True})
+
+else:
+
+    @app.route("/camera_status")
+    def camera_status():
+        """Get current camera streaming status when no camera exists."""
+        return jsonify({"streaming": False, "has_camera": False})
 
 
 def take_picture():
@@ -84,10 +125,7 @@ def main(status):
 @app.route("/")
 def index():
     """Video streaming home page."""
-    if HAS_CAMERA_ON:
-        return render_template("index.html")
-    else:
-        return render_template("index2.html")
+    return render_template("index.html", has_camera=HAS_CAMERA_ON)
 
 
 @app.route("/cmd", methods=["GET", "POST"])

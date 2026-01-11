@@ -14,16 +14,60 @@
             var isTouchDevice = "ontouchstart" in document.documentElement ? true : false;
             var BUTTON_DOWN = isTouchDevice ? "touchstart" : "mousedown";
             var BUTTON_UP = isTouchDevice ? "touchend" : "mouseup";
+            var isCameraStreaming = false;
 
-            $("button").bind(BUTTON_DOWN, function () {
+            // Motor control buttons
+            $("button.motor-btn").bind(BUTTON_DOWN, function () {
                 $.post("/cmd", { id: this.id, status: "press" }, function (data, status) {
                 });
             });
 
-            $("button").bind(BUTTON_UP, function () {
+            $("button.motor-btn").bind(BUTTON_UP, function () {
                 $.post("/cmd", { id: "stop", status: "release" }, function (data, status) {
                 });
             });
+
+            // Camera toggle button
+            $("#toggle-camera").click(function () {
+                {% if has_camera %}
+                $.post("/toggle_camera", function (data) {
+                    isCameraStreaming = data.streaming;
+                    updateCameraUI();
+                });
+                {% endif %}
+            });
+
+            // Take picture button
+            $("#take-picture").bind(BUTTON_DOWN, function () {
+                $.post("/cmd", { id: "take-picture", status: "press" }, function (data, status) {
+                });
+            });
+
+            function updateCameraUI() {
+                if (isCameraStreaming) {
+                    $("#video-feed").attr("src", "/video_feed?" + new Date().getTime());
+                    $("#video-container").show();
+                    $("#toggle-camera").text("Stop Camera");
+                    $("#toggle-camera").css("background-color", "#d9534f");
+                } else {
+                    $("#video-feed").attr("src", "");
+                    $("#video-container").hide();
+                    $("#toggle-camera").text("Start Camera");
+                    $("#toggle-camera").css("background-color", "#5cb85c");
+                }
+            }
+
+            // Initialize camera state from server
+            {% if has_camera %}
+            $.get("/camera_status", function (data) {
+                isCameraStreaming = data.streaming;
+                updateCameraUI();
+            });
+            {% else %}
+            $("#video-container").hide();
+            $("#toggle-camera").hide();
+            $("#take-picture").hide();
+            {% endif %}
         });
 
     </script>
@@ -56,6 +100,30 @@
         .video_out {
             display: inline-block;
             vertical-align: middle;
+        }
+
+        .camera_controls {
+            margin: 20px 0;
+        }
+
+        #toggle-camera {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+            background-color: #5cb85c;
+            margin-right: 10px;
+        }
+
+        #toggle-camera:hover {
+            opacity: 0.9;
+        }
+
+        #toggle-camera:active {
+            transform: scale(0.98);
         }
 
         .main_key {
@@ -183,34 +251,123 @@
             }
         }
     </style>
+    background: url("static/ic-left.png") no-repeat center center;
+    }
+
+    #ic-stop {
+    background: url("static/ic-stop.png") no-repeat center center;
+    }
+
+    #ic-right {
+    background: url("static/ic-right.png") no-repeat center center;
+    }
+
+    #ic-left-down {
+    background: url("static/ic-left-down.png") no-repeat center center;
+    }
+
+    #ic-down {
+    background: url("static/ic-down.png") no-repeat center center;
+    }
+
+    #ic-right-down {
+    background: url("static/ic-right-down.png") no-repeat center center;
+    }
+
+    button.btn-small {
+    background-size: 60.8% !important;
+    }
+
+    #ic-stop {
+    background-size: 78.4%
+    }
+
+    #ic-stop:active {
+    background-size: 72%
+    }
+
+    button.btn-small:active {
+    background-size: 56% !important;
+    }
+
+    @media screen and (min-width: 1024px) and (max-width: 1200px) {
+    main {
+    padding: 40px;
+    }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+    body {
+    background-color: #FFF9DE;
+    }
+
+    main {
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    border-radius: 0px;
+    }
+
+    .video_body {
+    width: 100vw;
+    height: auto
+    }
+
+    .main_key {
+    width: 100%;
+    }
+
+    .main_key>div {
+    width: 100%;
+    }
+
+    button.btn-all {
+    width: 30vw;
+    height: 30vw;
+    }
+
+    button.btn-middle img {
+    margin: 40px 0;
+    }
+
+    .main_key h2 {
+    font-size: 40px;
+    margin: 100px;
+    }
+    }
+    </style>
 
 </head>
 
 <body>
     <main>
-        <div class="video_out">
-            <img class="video_body" src="/video_feed" />
+        <div class="camera_controls">
+            <button id="toggle-camera">Start Camera</button>
+            <button class="btn-all btn-small" id="take-picture">Take Picture</button>
         </div>
-        <button class="btn-all btn-small" id="take-picture">Take Picture</button>
+
+        <div id="video-container" class="video_out" style="display:none;">
+            <img id="video-feed" class="video_body" src="" />
+        </div>
 
         <div class="main_key">
             <div>
                 <h2>Motor Control</h2>
                 <div class="btn_out">
                     <div>
-                        <button class="btn-all btn-small" id="ic-left-up"></button>
-                        <button class="btn-all btn-small" id="ic-up"></button>
-                        <button class="btn-all btn-small" id="ic-right-up"></button>
+                        <button class="btn-all btn-small motor-btn" id="ic-left-up"></button>
+                        <button class="btn-all btn-small motor-btn" id="ic-up"></button>
+                        <button class="btn-all btn-small motor-btn" id="ic-right-up"></button>
                     </div>
                     <div>
-                        <button class="btn-all btn-small" id="ic-left"></button>
-                        <button class="btn-all btn-middle" id="ic-stop"></button>
-                        <button class="btn-all btn-small" id="ic-right"></button>
+                        <button class="btn-all btn-small motor-btn" id="ic-left"></button>
+                        <button class="btn-all btn-middle motor-btn" id="ic-stop"></button>
+                        <button class="btn-all btn-small motor-btn" id="ic-right"></button>
                     </div>
                     <div>
-                        <button class="btn-all btn-small" id="ic-left-down"></button>
-                        <button class="btn-all btn-small" id="ic-down"></button>
-                        <button class="btn-all btn-small" id="ic-right-down"></button>
+                        <button class="btn-all btn-small motor-btn" id="ic-left-down"></button>
+                        <button class="btn-all btn-small motor-btn" id="ic-down"></button>
+                        <button class="btn-all btn-small motor-btn" id="ic-right-down"></button>
                     </div>
                 </div>
             </div>
