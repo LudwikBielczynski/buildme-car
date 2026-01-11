@@ -37,8 +37,8 @@ body {
     line-height: 1.5;
     color: var(--md-sys-color-on-surface);
     background: #FFFFFF;
-    min-height: 100vh;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -47,11 +47,12 @@ body {
 .app-container {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
     max-width: 1600px;
     margin: 0 auto;
-    padding: 12px;
-    gap: 12px;
+    padding: 8px;
+    gap: 8px;
+    overflow-y: auto;
 }
 
 /* Top App Bar */
@@ -150,7 +151,7 @@ body {
     border-radius: 12px;
     overflow: hidden;
     display: none;
-    max-height: 60vh;
+    max-height: 35vh;
 }
 
 #video-container.active {
@@ -309,90 +310,142 @@ body {
 /* Mobile Optimizations */
 @media (max-width: 768px) {
     .app-container {
-        padding: 8px;
-        gap: 8px;
+        padding: 4px;
+        gap: 4px;
     }
 
     .content-grid {
         grid-template-columns: 1fr;
-        gap: 8px;
+        gap: 4px;
     }
 
     .app-bar {
-        padding: 10px 16px;
-        border-radius: 12px;
+        padding: 8px 12px;
+        border-radius: 8px;
     }
 
     .app-bar-title {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .app-bar-title .material-icons {
-        font-size: 24px;
+        font-size: 20px;
     }
 
     .card {
-        padding: 16px;
-        border-radius: 12px;
+        padding: 12px;
+        border-radius: 8px;
     }
 
     .card-title {
-        font-size: 16px;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .card-title .material-icons {
+        font-size: 18px;
     }
 
     .motor-grid {
         max-width: 100%;
-        gap: 8px;
+        gap: 6px;
+    }
+
+    .motor-btn {
+        border-radius: 12px;
     }
 
     .motor-btn .material-icons {
-        font-size: 40px;
+        font-size: 32px;
     }
 
     #ic-stop .material-icons {
-        font-size: 48px;
+        font-size: 40px;
     }
 
     .camera-controls {
-        flex-direction: column;
+        flex-direction: row;
+        gap: 6px;
+        margin-bottom: 8px;
     }
 
     .md-button {
-        width: 100%;
-        justify-content: center;
+        padding: 8px 16px;
+        min-height: 36px;
+        font-size: 13px;
+        flex: 1;
+    }
+
+    .md-button .material-icons {
+        font-size: 16px;
     }
 
     #video-container {
-        max-height: 50vh;
+        max-height: 30vh;
     }
 }
 
 /* Landscape orientation - video left, controls right */
 @media (orientation: landscape) {
+    .app-container {
+        padding: 4px;
+        gap: 4px;
+    }
+
     .content-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        gap: 4px;
     }
 
     .card-full {
         grid-column: 1;
     }
 
+    .card {
+        padding: 8px;
+    }
+
+    .card-title {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
     .camera-controls {
         flex-direction: row;
         flex-wrap: nowrap;
+        gap: 4px;
+        margin-bottom: 6px;
     }
 
     .md-button {
-        width: auto;
+        padding: 6px 12px;
+        min-height: 32px;
+        font-size: 12px;
+    }
+
+    .md-button .material-icons {
+        font-size: 16px;
     }
 
     #video-container {
-        max-height: 75vh;
+        max-height: calc(100vh - 120px);
     }
 
     .motor-grid {
         max-width: 100%;
+        gap: 4px;
+    }
+
+    .motor-btn {
+        border-radius: 8px;
+    }
+
+    .motor-btn .material-icons {
+        font-size: 28px;
+    }
+
+    #ic-stop .material-icons {
+        font-size: 36px;
     }
 }
 
