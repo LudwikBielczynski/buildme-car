@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 import time
+from pathlib import Path
 
 from flask import Flask, Response, render_template, request
 
@@ -43,28 +44,38 @@ if HAS_CAMERA_ON:
         )
 
 
+def take_picture():
+    home = Path.home()
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"{home}/picture_{timestamp}.jpg"
+    Camera.take_picture(filename)
+    return f"Picture saved to {filename}"
+
+
 def main(status):
     match status:
-        case "ic_up":
+        case "ic-up":
             car.front()
-        case "ic_left":
+        case "ic-left":
             car.left()
-        case "ic_right":
+        case "ic-right":
             car.right()
-        case "ic_down":
+        case "ic-down":
             car.rear()
-        case "ic_stop":
+        case "ic-stop":
             car.stop
         case "stop":
             car.stop()
-        case "ic_leftUp":
+        case "ic-left-up":
             car.front_left()
-        case "ic_rightUp":
+        case "ic-right-up":
             car.front_right()
-        case "ic_leftDown":
+        case "ic-left-down":
             car.rear_left()
-        case "ic_rightDown":
+        case "ic-right-down":
             car.rear_right()
+        case "take-picture":
+            status = take_picture()
 
     print(status)
 
@@ -84,15 +95,6 @@ def button():
         data = request.form.to_dict()
         main(data["id"])
     return render_template("index.html")
-
-
-@app.route("/take_picture", methods=["POST"])
-def take_picture():
-    home = os.path.expanduser("~")
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{home}/picture_{timestamp}.jpg"
-    Camera.take_picture(filename)
-    return f"Picture saved to {filename}"
 
 
 if __name__ == "__main__":
