@@ -46,7 +46,7 @@ if HAS_CAMERA_ON:
 
 def take_picture():
     home = Path.home()
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{home}/picture_{timestamp}.jpg"
     Camera.take_picture(filename)
     return f"Picture saved to {filename}"
