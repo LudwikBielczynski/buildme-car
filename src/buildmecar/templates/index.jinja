@@ -2,12 +2,11 @@
 <html>
 
 <head>
-    <title>Camera Streaming</title>
+    <title>BuildMecar</title>
     <meta charset="UTF-8">
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-    <title> BuildMecar </title>
-    <!--<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" media="screen">-->
-    <script src="http://code.jquery.com/jquery.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
 
         $(function () {
@@ -166,61 +165,40 @@
             width: 125px;
             height: 125px;
             border: none;
-            /*background-color: rgba(0,0,0,0);*/
+            background-color: #E0E0E0;
             vertical-align: middle;
             cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        #ic-left-up {
-            background: url("static/ic-left-up.png") no-repeat center center;
+        button.btn-all:hover {
+            background-color: #BDBDBD;
+            transform: scale(1.05);
         }
 
-        #ic-up {
-            background: url("static/ic-up.png") no-repeat center center;
+        button.btn-all:active {
+            transform: scale(0.95);
         }
 
-        #ic-right-up {
-            background: url("static/ic-right-up.png") no-repeat center center;
-        }
-
-        #ic-left {
-            background: url("static/ic-left.png") no-repeat center center;
-        }
-
-        #ic-stop {
-            background: url("static/ic-stop.png") no-repeat center center;
-        }
-
-        #ic-right {
-            background: url("static/ic-right.png") no-repeat center center;
-        }
-
-        #ic-left-down {
-            background: url("static/ic-left-down.png") no-repeat center center;
-        }
-
-        #ic-down {
-            background: url("static/ic-down.png") no-repeat center center;
-        }
-
-        #ic-right-down {
-            background: url("static/ic-right-down.png") no-repeat center center;
-        }
-
-        button.btn-small {
-            background-size: 60.8% !important;
+        button.btn-all .material-icons {
+            font-size: 64px;
+            color: #424242;
         }
 
         #ic-stop {
-            background-size: 78.4%
+            background-color: #EF5350;
         }
 
-        #ic-stop:active {
-            background-size: 72%
+        #ic-stop:hover {
+            background-color: #E53935;
         }
 
-        button.btn-small:active {
-            background-size: 56% !important;
+        #ic-stop .material-icons {
+            color: white;
         }
 
         @media screen and (min-width: 1024px) and (max-width: 1200px) {
@@ -288,19 +266,37 @@
                 <h2>Motor Control</h2>
                 <div class="btn_out">
                     <div>
-                        <button class="btn-all btn-small motor-btn" id="ic-left-up"></button>
-                        <button class="btn-all btn-small motor-btn" id="ic-up"></button>
-                        <button class="btn-all btn-small motor-btn" id="ic-right-up"></button>
+                        <button class="btn-all motor-btn" id="ic-left-up">
+                            <span class="material-icons">north_west</span>
+                        </button>
+                        <button class="btn-all motor-btn" id="ic-up">
+                            <span class="material-icons">north</span>
+                        </button>
+                        <button class="btn-all motor-btn" id="ic-right-up">
+                            <span class="material-icons">north_east</span>
+                        </button>
                     </div>
                     <div>
-                        <button class="btn-all btn-small motor-btn" id="ic-left"></button>
-                        <button class="btn-all btn-middle motor-btn" id="ic-stop"></button>
-                        <button class="btn-all btn-small motor-btn" id="ic-right"></button>
+                        <button class="btn-all motor-btn" id="ic-left">
+                            <span class="material-icons">west</span>
+                        </button>
+                        <button class="btn-all motor-btn" id="ic-stop">
+                            <span class="material-icons">stop_circle</span>
+                        </button>
+                        <button class="btn-all motor-btn" id="ic-right">
+                            <span class="material-icons">east</span>
+                        </button>
                     </div>
                     <div>
-                        <button class="btn-all btn-small motor-btn" id="ic-left-down"></button>
-                        <button class="btn-all btn-small motor-btn" id="ic-down"></button>
-                        <button class="btn-all btn-small motor-btn" id="ic-right-down"></button>
+                        <button class="btn-all motor-btn" id="ic-left-down">
+                            <span class="material-icons">south_west</span>
+                        </button>
+                        <button class="btn-all motor-btn" id="ic-down">
+                            <span class="material-icons">south</span>
+                        </button>
+                        <button class="btn-all motor-btn" id="ic-right-down">
+                            <span class="material-icons">south_east</span>
+                        </button>
                     </div>
                 </div>
             </div>
