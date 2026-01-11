@@ -78,6 +78,7 @@ if HAS_CAMERA_ON:
         except Exception as e:
             print(f"Error toggling camera: {e}")
             import traceback
+
             traceback.print_exc()
             camera_streaming_enabled = False
             return jsonify({"streaming": False, "error": str(e)}), 500

@@ -30,7 +30,9 @@ class Camera(BaseCamera):
                 stream.truncate()
 
     def take_picture(self, filename):
-        self.stop_streaming()
+        was_streaming = self._streaming
+        if was_streaming:
+            self.stop_streaming()
         with picamera.PiCamera() as camera:
             camera.exposure_mode = "auto"
             camera.awb_mode = "auto"
@@ -39,4 +41,5 @@ class Camera(BaseCamera):
             camera.awb_mode = "off"
             camera.awb_gains = gain
             camera.capture(filename)
-        self.start_streaming()
+        if was_streaming:
+            self.start_streaming()
