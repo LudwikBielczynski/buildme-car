@@ -43,26 +43,28 @@ if HAS_CAMERA_ON:
 
 
 def main(status):
-    if status == "ic_up":
-        car.front()
-    elif status == "ic_left":
-        car.left()
-    elif status == "ic_right":
-        car.right()
-    elif status == "ic_down":
-        car.rear()
-    elif status == "ic_stop":
-        car.stop()
-    elif status == "stop":
-        car.stop()
-    elif status == "ic_leftUp":
-        car.front_left()
-    elif status == "ic_rightUp":
-        car.front_right()
-    elif status == "ic_leftDown":
-        car.rear_left()
-    elif status == "ic_rightDown":
-        car.rear_right()
+    match status:
+        case "ic_up":
+            car.front()
+        case "ic_left":
+            car.left()
+        case "ic_right":
+            car.right()
+        case "ic_down":
+            car.rear()
+        case "ic_stop":
+            car.stop
+        case "stop":
+            car.stop()
+        case "ic_leftUp":
+            car.front_left()
+        case "ic_rightUp":
+            car.front_right()
+        case "ic_leftDown":
+            car.rear_left()
+        case "ic_rightDown":
+            car.rear_right()
+
     print(status)
 
 
