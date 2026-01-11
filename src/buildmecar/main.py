@@ -28,7 +28,6 @@ app = Flask(__name__)
 # Global state for camera streaming
 camera_streaming_enabled = False
 camera_instance = None
-car = None
 
 
 # Automatically detects whether the camera exists and switches modes
@@ -108,12 +107,6 @@ def take_picture():
 
 
 def main(status):
-    global car
-    result = None
-
-    if car is None:
-        return "Car not initialized"
-
     match status:
         case "ic-up":
             car.front()
