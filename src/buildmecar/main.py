@@ -152,7 +152,7 @@ def main(status):
 def index():
     """Video streaming home page."""
     print(f"Rendering index with has_camera={HAS_CAMERA_ON}")
-    return render_template("index.html", has_camera=HAS_CAMERA_ON)
+    return render_template("index.jinja", has_camera=HAS_CAMERA_ON)
 
 
 @app.route("/cmd", methods=["GET", "POST"])
@@ -164,7 +164,7 @@ def button():
             "status": "ok",
             "message": result if result else "command executed",
         })
-    return render_template("index.html", has_camera=HAS_CAMERA_ON)
+    return render_template("index.jinja", has_camera=HAS_CAMERA_ON)
 
 
 if __name__ == "__main__":
