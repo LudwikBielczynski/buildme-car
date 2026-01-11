@@ -32,15 +32,16 @@ class CameraEvent:
         self.events: dict[int : threading.Event()] = {}
         self.lock = threading.Lock()
 
-    def wait(self):
+    def wait(self, timeout=None):
         """Invoked from each client's thread to wait for the next frame."""
         ident = get_ident()
         with self.lock:
             if ident not in self.events:
                 self.events[ident] = threading.Event()
             event = self.events[ident]
-        event.wait()
+        result = event.wait(timeout=timeout)
         event.clear()
+        return result
 
     def set(self):
         """Invoked by the camera thread when a new frame is available."""
