@@ -1,7 +1,10 @@
 import io
 import time
 
-import picamera
+try:
+    import picamera
+except ImportError:
+    picamera = None
 
 from buildmecar.base_camera import BaseCamera
 
