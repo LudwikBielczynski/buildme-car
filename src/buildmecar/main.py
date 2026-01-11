@@ -18,7 +18,7 @@ def execute_command(cmd: str):
 
 
 video_devices = execute_command("ls /dev/video*")
-HAS_CAMERA_ON = re.search(r"video0", video_devices, flags=re.I)
+HAS_CAMERA_ON = bool(re.search(r"video0", video_devices, flags=re.I))
 
 DEFAULT_MOTOR_SPEED = 98
 DEFAULT_MOTOR_PULSE = 1000
