@@ -113,6 +113,15 @@ The server will start on port 5002. Access the web interface at:
 http://<raspberry-pi-ip>:5002
 ```
 
+![BuildMecar Web Interface](docs/static/imgs/web-interface.png)
+
+The web interface provides an intuitive Material Design control panel with:
+- **Camera Control Panel**: Toggle camera streaming and capture photos
+- **Live Video Feed**: Real-time camera stream display when enabled
+- **Motor Control Grid**: 3x3 directional pad for omnidirectional movement
+- **Status Indicators**: Real-time camera streaming status
+- **Touch-Optimized**: Responsive design works on both desktop and mobile devices
+
 #### Test Motors
 
 To test individual motors:
