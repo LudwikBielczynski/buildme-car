@@ -31,10 +31,10 @@ class Car:
 
         if self._has_motors:
             # Needs change depending on the place where the motors are connected
-            self.motor_right_rear = PassiveMotor("D")
-            self.motor_right_front = PassiveMotor("A")
-            self.motor_left_rear = PassiveMotor("C")
             self.motor_left_front = PassiveMotor("B")
+            self.motor_left_rear = PassiveMotor("C")
+            self.motor_right_front = PassiveMotor("A")
+            self.motor_right_rear = PassiveMotor("D")
 
             self.directions_correction = MotorDirections(
                 right_rear=1,
@@ -45,7 +45,8 @@ class Car:
 
     def set_speed(self, motor: PassiveMotor, speed: int = DEFAULT_MOTOR_SPEED):
         motor.start(int(speed))
-        logger.info(f"Motor on port {motor.port} set to speed {speed}")
+        port_name = chr(motor.port + ord("A"))
+        logger.info(f"Motor on port {port_name} set to speed {speed}")
 
     def _run_motor(self, directions: MotorDirections, speed: int, time_ms: int) -> None:
         """
