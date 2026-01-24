@@ -45,7 +45,7 @@ class Car:
 
     def set_speed(self, motor: PassiveMotor, speed: int = DEFAULT_MOTOR_SPEED):
         motor.start(int(speed))
-        logger(f"Motor on port {motor.port} set to speed {speed}")
+        logger.info(f"Motor on port {motor.port} set to speed {speed}")
 
     def _run_motor(self, directions: MotorDirections, speed: int, time_ms: int) -> None:
         """
