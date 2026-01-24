@@ -37,10 +37,10 @@ class Car:
             self.motor_right_rear = PassiveMotor("D")
 
             self.directions_correction = MotorDirections(
-                right_rear=1,
-                right_front=1,
-                left_rear=-1,
-                left_front=-1,
+                left_front=-1.0,
+                left_rear=-1.0,
+                right_front=1.0,
+                right_rear=1.0,
             )
 
     def set_speed(self, motor: PassiveMotor, speed: int = DEFAULT_MOTOR_SPEED):
