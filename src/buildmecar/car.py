@@ -5,10 +5,10 @@ from buildhat import Hat, PassiveMotor
 
 
 class MotorDirections(NamedTuple):
-    right_rear: float
-    right_front: float
-    left_rear: float
     left_front: float
+    left_rear: float
+    right_front: float
+    right_rear: float
 
 
 DEFAULT_MOTOR_SPEED = 98
@@ -68,35 +68,75 @@ class Car:
         time.sleep(time_ms / DEFAULT_MOTOR_PULSE)
 
     def front(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
-        directions = MotorDirections(1, 1, 1, 1)
+        directions = MotorDirections(
+            left_front=1,
+            left_rear=1,
+            right_front=1,
+            right_rear=1,
+        )
         self._run_motor(directions, speed, time_ms)
 
     def rear(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
-        directions = MotorDirections(-1, -1, -1, -1)
+        directions = MotorDirections(
+            left_front=-1,
+            left_rear=-1,
+            right_front=-1,
+            right_rear=-1,
+        )
         self._run_motor(directions, speed, time_ms)
 
     def right(self, speed=DEFAULT_MOTOR_SPEED, time_ms=0):
-        directions = MotorDirections(-1, 1, 1, -1)
+        directions = MotorDirections(
+            left_front=-1,
+            left_rear=1,
+            right_front=1,
+            right_rear=-1,
+        )
         self._run_motor(directions, speed, time_ms)
 
     def left(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
-        directions = MotorDirections(1, -1, -1, 1)
+        directions = MotorDirections(
+            left_front=1,
+            left_rear=-1,
+            right_front=-1,
+            right_rear=1,
+        )
         self._run_motor(directions, speed, time_ms)
 
     def front_left(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
-        directions = MotorDirections(1.0 / 2, 1, -1.0 / 2, -1)
+        directions = MotorDirections(
+            left_front=-1,
+            left_rear=-1.0 / 2,
+            right_front=1,
+            right_rear=1.0 / 2,
+        )
         self._run_motor(directions, speed, time_ms)
 
     def front_right(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
-        directions = MotorDirections(0.0, -1, 0.0, 1)
+        directions = MotorDirections(
+            left_front=1,
+            left_rear=0.0,
+            right_front=-1,
+            right_rear=0.0,
+        )
         self._run_motor(directions, speed, time_ms)
 
     def rear_left(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
-        directions = MotorDirections(1, 1.0 / 2, -1, -1.0 / 2)
+        directions = MotorDirections(
+            left_front=-1.0 / 2,
+            left_rear=-1,
+            right_front=1.0 / 2,
+            right_rear=1,
+        )
         self._run_motor(directions, speed, time_ms)
 
     def rear_right(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
-        directions = MotorDirections(-1, -1.0 / 2, 1, 1.0 / 2)
+        directions = MotorDirections(
+            left_front=1.0 / 2,
+            left_rear=1,
+            right_front=-1.0 / 2,
+            right_rear=-1,
+        )
         self._run_motor(directions, speed, time_ms)
 
     def stop(self) -> None:
