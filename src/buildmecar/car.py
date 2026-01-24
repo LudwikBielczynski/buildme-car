@@ -14,7 +14,7 @@ class MotorDirections(NamedTuple):
     right_rear: float
 
 
-DEFAULT_MOTOR_SPEED = 98
+DEFAULT_MOTOR_SPEED = 200
 DEFAULT_MOTOR_PULSE = 1000
 
 
