@@ -44,6 +44,11 @@ class Car:
         port.start(int(speed))
 
     def _run_motor(self, directions: MotorDirections, speed: int, time_ms: int) -> None:
+        """
+        Using configuration from here:
+        https://docs.revrobotics.com/duo-build/mecanum-drivetrain-kit-mecanum-drivetrain/mecanum-wheel-setup-and-behavior
+
+        """
         if not self._has_motors:
             print(
                 f"SIMULATE: Motor command - directions={directions}, speed={speed}, time={time_ms}ms"
@@ -87,19 +92,19 @@ class Car:
 
     def right(self, speed=DEFAULT_MOTOR_SPEED, time_ms=0):
         directions = MotorDirections(
-            left_front=-1,
-            left_rear=1,
-            right_front=1,
-            right_rear=-1,
+            left_front=1,
+            left_rear=-1,
+            right_front=-1,
+            right_rear=1,
         )
         self._run_motor(directions, speed, time_ms)
 
     def left(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
         directions = MotorDirections(
-            left_front=1,
-            left_rear=-1,
-            right_front=-1,
-            right_rear=1,
+            left_front=-1,
+            left_rear=1,
+            right_front=1,
+            right_rear=-1,
         )
         self._run_motor(directions, speed, time_ms)
 
