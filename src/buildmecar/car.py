@@ -40,8 +40,9 @@ class Car:
                 left_front=-1,
             )
 
-    def set_speed(self, port: int, speed: int = DEFAULT_MOTOR_SPEED):
-        port.start(int(speed))
+    def set_speed(self, motor: PassiveMotor, speed: int = DEFAULT_MOTOR_SPEED):
+        motor.start(int(speed))
+        print(f"Motor on port {motor.port} set to speed {speed}")
 
     def _run_motor(self, directions: MotorDirections, speed: int, time_ms: int) -> None:
         """
