@@ -88,7 +88,7 @@ class Car:
         self._run_motor(directions, speed, time_ms)
 
     def front_right(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
-        directions = MotorDirections(-1.0, 0, 0.0, 0)
+        directions = MotorDirections(0.0, -1, 0.0, 1)
         self._run_motor(directions, speed, time_ms)
 
     def rear_left(self, speed: int = DEFAULT_MOTOR_SPEED, time_ms: int = 0) -> None:
